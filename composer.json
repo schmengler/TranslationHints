@@ -1,0 +1,17 @@
+{
+    "name": "sse/formfiller",
+    "license": "osl-3.0",
+    "type": "magento-module",
+    "description": "Development tool: Add information to translated strings where they come from",
+    "homepage": "https://github.com/schmengler/TranslationHints",
+    "require": {
+        "php": ">=5.4",
+        "magento-hackathon/magento-composer-installer": "*"
+    },
+    "authors":[
+        {
+            "name":"Fabian Schmengler",
+            "email":"fabian@schmengler-se.de"
+        }
+    ]
+}
