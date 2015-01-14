@@ -1,3 +1,6 @@
 #SSE_TranslationHints
 app/etc/modules/SSE_TranslationHints.xml app/etc/modules/SSE_TranslationHints.xml
 app/code/community/SSE/TranslationHints app/code/community/SSE/TranslationHints
+app/design/frontend/base/default/layout/sse_translationhints.xml app/design/frontend/base/default/layout/sse_translationhints.xml
+skin/frontend/base/default/css/sse/translationhints.css skin/frontend/base/default/css/sse/translationhints.css
+js/sse/translationhints.js js/sse/translationhints.js

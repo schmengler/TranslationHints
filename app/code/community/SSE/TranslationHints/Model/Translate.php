@@ -16,6 +16,8 @@
  */
 class SSE_TranslationHints_Model_Translate extends Mage_Core_Model_Translate
 {
+    const XML_HINTS_ENABLED = 'dev/debug/translation_hints';
+
     const MODE_DB = 'db';
     const MODE_MODULE = 'module';
     const MODE_THEME = 'theme';
@@ -41,7 +43,7 @@ class SSE_TranslationHints_Model_Translate extends Mage_Core_Model_Translate
      */
     public function isEnabled()
     {
-        $this->_helper()->isModuleOutputEnabled();
+        return $this->_helper()->isModuleOutputEnabled() && Mage::getStoreConfigFlag(self::XML_HINTS_ENABLED);
     }
     /**
      * (non-PHPdoc) Overridden to set mode

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+/**
+ * This file is part of SSE_TranslationHints for Magento.
+ *
+ * @license http://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * @author Fabian Schmengler <fabian@schmengler-se.de> <@fschmengler>
+ * @category SSE
+ * @package SSE_TranslationHints
+ * @copyright Copyright (c) 2015 Schmengler Software Engineering (http://www.schmengler-se.de/)
+ */
+-->
+<layout version="0.1.0">
+    <default>
+        <reference name="head">
+            <action ifconfig="dev/debug/translation_hints" method="addJs"><name>sse/translationhints.js</name></action>
+            <action ifconfig="dev/debug/translation_hints" method="addCss"><name>css/sse/translationhints.css</name></action>
+        </reference>
+    </default>
+</layout>

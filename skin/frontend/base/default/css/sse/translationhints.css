@@ -1,0 +1,41 @@
+.translation-hint-icon {
+	display: inline;
+	position: static;
+	padding: 1px 5px;
+    border-radius: 6px;
+    cursor: help;
+    background-color: #66f;
+	color: #fff;
+	font-weight: bold;
+    font-style: normal;
+    font-size: 8px;
+	font-family: serif;
+	text-align: center;
+    text-decoration: none;
+    text-transform: none;
+}
+.translation-hint-icon + .translation-hint-popup {
+	display: none;
+    position: absolute;
+    z-index: 99999;
+    width: auto;
+    height: auto;
+    max-width: 200px;
+    padding: 2px;
+    margin: 0;
+    border: 1px solid #999;
+    box-shadow: 1px 1px 0px #000;
+    background-color: #ffc;
+    color: #000;
+    font-family: sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 10px;
+    line-height: 11px;
+    text-align: left;
+    text-decoration: none;
+    text-transform: none;
+}
+.translation-hint-icon:hover + .translation-hint-popup {
+    display: block;    
+}

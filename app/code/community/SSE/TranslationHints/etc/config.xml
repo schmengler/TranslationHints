@@ -4,7 +4,7 @@
  * This file is part of SSE_TranslationHints for Magento.
  *
  * @license http://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * @author Fabian Schmengler <fabian@schmengler-se.de>
+ * @author Fabian Schmengler <fabian@schmengler-se.de> <@fschmengler>
  * @category SSE
  * @package SSE_TranslationHints
  * @copyright Copyright (c) 2015 Schmengler Software Engineering (http://www.schmengler-se.de/)
@@ -33,4 +33,13 @@
             </core>
         </models>
     </global>
+    <frontend>
+        <layout>
+            <updates>
+                <sse_translationhints module="SSE_TranslationHints">
+                    <file>sse_translationhints.xml</file>
+                </sse_translationhints>
+            </updates>
+        </layout>
+    </frontend>
 </config>
