@@ -2,6 +2,21 @@ SSE_TranslationHints
 ======
 Adds a new configuration option next to the template hints "Translation Hints" which will enable information about source of translations.
 
+## Requirements ##
+
+* Magento 1.x
+* PHP 5.4 or higher
+
+## Installation
+
+1. Manual installation: download [the latest release](https://github.com/schmengler/TranslationHints/zipball/master) and copy the directories `app`, `js` and `skin` into the Magento installation.
+2. Install via composer as dev dependency:
+
+    "require-dev": {
+        "sse/translationhints": "dev-master"
+    }
+    
+
 ## Configuration
 
 Enable translation hints per website or per store view in System > Configuration > Advanced > Developer > Debug:

@@ -1,5 +1,5 @@
 {
-    "name": "sse/formfiller",
+    "name": "sse/translationhints",
     "license": "osl-3.0",
     "type": "magento-module",
     "description": "Development tool: Add information to translated strings where they come from",
