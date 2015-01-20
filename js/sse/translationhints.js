@@ -7,9 +7,23 @@ document.observe('dom:loaded',
             false
         );
         var decorateTranslationHints = function(textNode) {
-            var newText =  textNode.nodeValue.replace(/\[__(.*?)__\]\((.*?):(.*?)\)(\(cached\))?/g,
-                '$1 <span class="translation-hint-icon">i</span>' +
-                '<span class="translation-hint-popup"><b>$2:</b> $3<br/>$4</span>');
+            var newText =  textNode.nodeValue.replace(/\[__(.*?)__\]\(\(__\((.*?)\):(.*?)(?:__\((.*?)\):(.*?))?(\(cached\))?\)\)/g,
+            	function(match, translated, code, codeSources, text, textSources, cached) {
+            		var result = translated + ' <span class="translation-hint-icon">i</span>';
+            		result += '<span class="translation-hint-popup">';
+            		result += '<b>'+ code +':</b><br/>';
+            		result += codeSources.replace(/\|/g, '<br/>');
+            		if (text) {
+                		result += '<b>'+ text +':</b><br/>';
+                		result += textSources.replace(/\|/g, '<br/>');
+            		}
+            		if (cached) {
+            			result += cached;
+            		}
+            		result += '</span>';
+            		return result;
+            	}
+            );
             if (newText == textNode.nodeValue) {
             	return null;
             }
