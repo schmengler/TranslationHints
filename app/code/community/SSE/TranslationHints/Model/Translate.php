@@ -45,7 +45,9 @@ class SSE_TranslationHints_Model_Translate extends Mage_Core_Model_Translate
      */
     public function getTranslationHintsEnabled()
     {
-        //TODO make it impossible together with _translateInline
+        if ($this->_translateInline && $this->getTranslateInline()) {
+            return false;
+        }
         return $this->_helper()->isModuleOutputEnabled() && Mage::getStoreConfigFlag(self::XML_HINTS_ENABLED);
     }
     /**
