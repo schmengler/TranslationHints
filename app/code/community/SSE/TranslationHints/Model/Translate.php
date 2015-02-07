@@ -84,6 +84,21 @@ class SSE_TranslationHints_Model_Translate extends Mage_Core_Model_Translate
     }
 
     /**
+     * Overridden to cache own data model SSE_TranslationHints_Model_Data instead of array
+     * 
+     * (non-PHPdoc)
+     * @see Mage_Core_Model_Translate::_saveCache()
+     */
+    protected function _saveCache()
+    {
+        if (!$this->_canUseCache()) {
+            return $this;
+        }
+        Mage::app()->saveCache(serialize(parent::getData()), $this->getCacheId(), array(self::CACHE_TAG), null);
+        return $this;
+    }
+    
+    /**
      * (non-PHPdoc) Overridden to force reload if translation hints enabled and cache does not contain meta data
      * @see Mage_Core_Model_Translate::_loadCache()
      */
@@ -120,9 +135,6 @@ class SSE_TranslationHints_Model_Translate extends Mage_Core_Model_Translate
                 }
             }
         }
-        // kurz rekapituliert: wenn übersetzung nur einmal definiert ist, gilt sie überall (key ohne scope)
-        //  wenn sie mehrmals in unterschiedlichem scope definiert ist, gilt sie jeweils nur in diesem scope (key mit scope)
-        //  wenn dabei der developer mode ausgeschaltet ist, gilt außerdem die erste fassung überall
         return parent::_addData($data, $scope, $forceReload);
     }
     public function getData()
