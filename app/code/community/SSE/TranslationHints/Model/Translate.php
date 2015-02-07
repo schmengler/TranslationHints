@@ -13,7 +13,6 @@
  * Translate Model, rewritten to add translation hints to translated strings
  * 
  * @package SSE_TranslationHints
- * @property SSE_TranslationHints_Model_Data $_data
  */
 class SSE_TranslationHints_Model_Translate extends Mage_Core_Model_Translate
 {
@@ -22,6 +21,11 @@ class SSE_TranslationHints_Model_Translate extends Mage_Core_Model_Translate
      * @var SSE_TranslationHints_Model_Translate_Mode
      */
     protected $_mode;
+    /**
+     * 
+     * @var array|SSE_TranslationHints_Model_Data
+     */
+    protected $_data;
     /**
      * @var SSE_TranslationHints_Model_Decorator
      */
@@ -128,12 +132,17 @@ class SSE_TranslationHints_Model_Translate extends Mage_Core_Model_Translate
         }
         /*
          * If $key equals $value, Magento does not save the translations.
-         * We add the source to the metadata anyway:
+         * We add the source to the metadata anyway, without selecting it:
          */
         if ($this->getTranslationHintsEnabled()) {
             foreach ($data as $key => $value) {
                 if ($key === $value) {
+                    //TODO move this logic elsewhere
+                    $keyExistedBefore = isset($this->_data->getData()[$key]);
                     $this->_data->logMetaData($key, $value, false);
+                    if (!$keyExistedBefore) {
+                        $this->_data->getMetadata()[$key]->unsetValue();
+                    }
                 }
             }
         }
