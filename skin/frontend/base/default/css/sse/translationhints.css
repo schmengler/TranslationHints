@@ -40,12 +40,10 @@
 .translation-hint-icon:hover + .translation-hint-popup {
     display: block;    
 }
-.translation-hint-check {
+.translation-hint-check,
+.translation-hint-check-not {
     display: inline;
-    padding: 1px 5px;
     border-radius: 6px;
-    background-color: #393;
-    color: #fff;
     font-weight: normal;
     font-style: normal;
     font-size: 8px;
@@ -53,6 +51,18 @@
     text-align: center;
     text-decoration: none;
     text-transform: none;
+}
+.translation-hint-check {
+    background-color: #393;
+    padding: 1px 5px;
+    color: #fff;	
+}
+.translation-hint-check-not {
+    background-color: transparent;
+    border-width: 1px;
+    padding: 0px 4px;
+    border-style: solid;
+    color: #393;
 }
 .translation-hint-tag {
     display: inline;

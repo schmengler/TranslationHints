@@ -19,7 +19,7 @@ document.observe('dom:loaded',
                         result += '<b>'+ text +':</b><br/>';
                         result += textSources
                             .replace(/\|/g, '<br/>')
-                            .replace(/\(x\)/g, '<span class="translation-hint-check">&#x2714;</span>');
+                            .replace(/\(x\)/g, '<span class="translation-hint-check' + (codeSources ? '-not' : '') + '">&#x2714;</span>');
                     }
                     if (cached) {
                         result += '<span class="translation-hint-tag">cached</span>&nbsp;';
