@@ -39,3 +39,17 @@
 .translation-hint-icon:hover + .translation-hint-popup {
     display: block;    
 }
+.translation-hint-check {
+    display: inline;
+    padding: 1px 5px;
+    border-radius: 6px;
+    background-color: #393;
+    color: #fff;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 8px;
+    font-family: sans-serif;
+    text-align: center;
+    text-decoration: none;
+    text-transform: none;
+}
