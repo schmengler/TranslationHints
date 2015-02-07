@@ -33,6 +33,19 @@
             </core>
         </models>
     </global>
+    <adminhtml>
+        <events>
+            <admin_system_config_changed_section_dev>
+                <observers>
+                    <modulename>
+                        <type>singleton</type>
+                        <class>sse_translationhints/observer</class>
+                        <method>validateConfig</method>
+                    </modulename>
+                </observers>
+            </admin_system_config_changed_section_dev>
+        </events>
+    </adminhtml>
     <frontend>
         <layout>
             <updates>

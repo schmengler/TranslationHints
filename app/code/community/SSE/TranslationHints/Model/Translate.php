@@ -13,24 +13,26 @@
  * Translate Model, rewritten to add translation hints to translated strings
  * 
  * @package SSE_TranslationHints
+ * @property SSE_TranslationHints_Model_Data $_data
  */
 class SSE_TranslationHints_Model_Translate extends Mage_Core_Model_Translate
 {
     const XML_HINTS_ENABLED = 'dev/debug/translation_hints';
-
-    const MODE_DB = 'db';
-    const MODE_MODULE = 'module';
-    const MODE_THEME = 'theme';
+    /**
+     * @var SSE_TranslationHints_Model_Translate_Mode
+     */
+    protected $_mode;
+    /**
+     * @var SSE_TranslationHints_Model_Decorator
+     */
+    protected $_decorator;
     
-    /**
-     * @var string Mode, defines source of currently added translation data
-     */
-    protected $_currentMode;
-    /**
-     * @var string File of currently added translation data (if mode is not MODE_DB)
-     */
-    protected $_currentFile;
-
+    public function __construct()
+    {
+        $this->_mode = Mage::getModel('sse_translationhints/translate_mode');
+        $this->_decorator = Mage::getModel('sse_translationhints/decorator', $this);
+        $this->_decorator->setMode($this->_mode);
+    }
     /**
      * @return SSE_TranslationHints_Helper_Data
      */
@@ -41,8 +43,11 @@ class SSE_TranslationHints_Model_Translate extends Mage_Core_Model_Translate
     /**
      * @return bool
      */
-    public function isEnabled()
+    public function getTranslationHintsEnabled()
     {
+        if ($this->_translateInline && $this->getTranslateInline()) {
+            return false;
+        }
         return $this->_helper()->isModuleOutputEnabled() && Mage::getStoreConfigFlag(self::XML_HINTS_ENABLED);
     }
     /**
@@ -51,8 +56,8 @@ class SSE_TranslationHints_Model_Translate extends Mage_Core_Model_Translate
      */
     protected function _loadDbTranslation($forceReload=false)
     {
-        $this->_currentMode = self::MODE_DB;
-        $this->_currentFile = null;
+        $this->_mode->setCurrentSourceType(SSE_TranslationHints_Model_Translate_Mode::SOURCE_DB);
+        $this->_mode->setCurrentSourceFile(null);
         return parent::_loadDbTranslation($forceReload);
     }
     /**
@@ -61,10 +66,10 @@ class SSE_TranslationHints_Model_Translate extends Mage_Core_Model_Translate
      */
     protected function _loadModuleTranslation($moduleName, $files, $forceReload=false)
     {
-        $this->_currentMode = self::MODE_MODULE;
+        $this->_mode->setCurrentSourceType(SSE_TranslationHints_Model_Translate_Mode::SOURCE_MODULE);
         foreach ($files as $file) {
             $file = $this->_getModuleFilePath($moduleName, $file);
-            $this->_currentFile = substr($file, strlen(Mage::getBaseDir('locale')));
+            $this->_mode->setCurrentSourceFile(substr($file, strlen(Mage::getBaseDir('locale'))));
             $this->_addData($this->_getFileData($file), $moduleName, $forceReload);
         }
         return $this;
@@ -75,89 +80,85 @@ class SSE_TranslationHints_Model_Translate extends Mage_Core_Model_Translate
      */
     protected function _loadThemeTranslation($forceReload=false)
     {
-        $this->_currentMode = self::MODE_THEME;
-        $this->_currentFile = substr(Mage::getDesign()->getLocaleFileName('translate.csv'), strlen(Mage::getBaseDir('design')));
+        $this->_mode->setCurrentSourceType(SSE_TranslationHints_Model_Translate_Mode::SOURCE_THEME);
+        $this->_mode->setCurrentSourceFile(substr(Mage::getDesign()->getLocaleFileName('translate.csv'), strlen(Mage::getBaseDir('design'))));
         return parent::_loadThemeTranslation($forceReload);
     }
+
     /**
-     * (non-PHPdoc) Overridden to set mode
+     * Overridden to cache own data model SSE_TranslationHints_Model_Data instead of array
+     * 
+     * (non-PHPdoc)
+     * @see Mage_Core_Model_Translate::_saveCache()
+     */
+    protected function _saveCache()
+    {
+        if (!$this->_canUseCache()) {
+            return $this;
+        }
+        Mage::app()->saveCache(serialize(parent::getData()), $this->getCacheId(), array(self::CACHE_TAG), null);
+        return $this;
+    }
+    
+    /**
+     * (non-PHPdoc) Overridden to force reload if translation hints enabled and cache does not contain meta data
      * @see Mage_Core_Model_Translate::_loadCache()
      */
     protected function _loadCache()
     {
-        $cache = parent::_loadCache();
-        if ($cache !== false) {
-            $cache = array_map([$this, '_decorateCacheHint'], $cache);
+        $result = parent::_loadCache();
+        if ($this->getTranslationHintsEnabled() && !($result instanceof SSE_TranslationHints_Model_Data)) {
+            return false;
         }
-        return $cache;
+        if ($result !== false) {
+            $this->_mode->setUseCache(true);
+        }
+        return $result;
     }
-
     /**
-     * (non-PHPdoc) Overridden to add _decorateTranslationHint()
-     * 
+     * (non-PHPdoc) Overridden to convert data to object with meta information
      * @see Mage_Core_Model_Translate::_addData()
      */
     protected function _addData($data, $scope, $forceReload=false)
     {
-        //TODO collect information about fallbacks and overrides
-        foreach ($data as $key => $value) {
-            if ($key === $value) {
-                continue;
-            }
-            $key    = $this->_prepareDataString($key);
-            $value  = $this->_decorateTranslationHint($this->_prepareDataString($value));
-            if ($scope && isset($this->_dataScope[$key]) && !$forceReload ) {
-                /**
-                 * Checking previos value
-                 */
-                $scopeKey = $this->_dataScope[$key] . self::SCOPE_SEPARATOR . $key;
-                if (!isset($this->_data[$scopeKey])) {
-                    if (isset($this->_data[$key])) {
-                        $this->_data[$scopeKey] = $this->_data[$key];
-                        /**
-                         * Not allow use translation not related to module
-                         */
-                        if (Mage::getIsDeveloperMode()) {
-                            unset($this->_data[$key]);
-                        }
-                    }
+        if ($this->getTranslationHintsEnabled() && is_array($this->_data)) {
+            $this->_data = Mage::getModel('sse_translationhints/data', $this->_data);
+            $this->_data->setDataScope($this->_dataScope);
+            $this->_data->setMode($this->_mode);
+        }
+        /*
+         * If $key equals $value, Magento does not save the translations.
+         * We add the source to the metadata anyway:
+         */
+        if ($this->getTranslationHintsEnabled()) {
+            foreach ($data as $key => $value) {
+                if ($key === $value) {
+                    $this->_data->logMetaData($key, $value, false);
                 }
-                $scopeKey = $scope . self::SCOPE_SEPARATOR . $key;
-                $this->_data[$scopeKey] = $value;
-            }
-            else {
-                $this->_data[$key]     = $value;
-                $this->_dataScope[$key]= $scope;
             }
         }
-        return $this;
+        return parent::_addData($data, $scope, $forceReload);
     }
-    /**
-     * Add translation hint to string if hints enabled
-     * 
-     * @param string $string
-     * @return string
-     */
-    protected function _decorateTranslationHint($string)
+    public function getData()
     {
-        if (!$this->isEnabled()) {
-            return $string;
+        if ($this->_data instanceof SSE_TranslationHints_Model_Data) {
+            return $this->_data->getData();
         }
-        return sprintf('[__%s__](%s%s)', $string,
-                $this->_currentMode,
-                $this->_currentFile ? ':' . $this->_currentFile : '');
+        return parent::getData();
     }
-    /**
-     * Add cache info to string if hints enabled
-     * 
-     * @param string $string
-     * @return string
-     */
-    protected function _decorateCacheHint($string)
+    public function getMetaData()
     {
-        if (!$this->isEnabled()) {
-            return $string;
+        if ($this->_data instanceof SSE_TranslationHints_Model_Data) {
+            return $this->_data->getMetadata();
         }
-        return $string . '(cached)';
+        return array();
+    }
+    protected function _getTranslatedString($text, $code)
+    {
+        $result = parent::_getTranslatedString($text, $code);
+        if ($this->getTranslationHintsEnabled()) {
+            return $this->_decorator->decorateTranslation($result, $text, $code);
+        }
+        return $result;
     }
 }
