@@ -84,20 +84,38 @@ class SSE_TranslationHints_Model_Data implements Serializable, ArrayAccess
         $valueObject = new SSE_TranslationHints_Model_Data_Value(
             $value, $this->_mode->getCurrentSourceType(), $this->_mode->getCurrentSourceFile()
         );
-        // find out if old value is being moved to scope, then copy value object and don't use current mode
         if (strpos($key, Mage_Core_Model_Translate::SCOPE_SEPARATOR)) {
             list($scope, $keyWithoutScope) = explode(Mage_Core_Model_Translate::SCOPE_SEPARATOR, $key, 2);
+            // find out if old value is being moved to scope, then copy value object and don't use current mode
             if (isset($this->_dataScope[$keyWithoutScope])
                 && $this->_dataScope[$keyWithoutScope] === $scope
                 && isset($this->_metaData[$keyWithoutScope])
                 && null !== $this->_metaData[$keyWithoutScope]->getValue()
             ) {
                 $valueObject = $this->_metaData[$keyWithoutScope]->getValue();
+            // else log key without scope as "unused"
+            } else {
+                $this->logMetaDataUnused($keyWithoutScope, $value);
             }
         }
         $this->_metaData[$key]->addValue(
             $valueObject,
-            $override
+            $override ? SSE_TranslationHints_Model_Data_Meta::ADD_MODE_OVERRIDE
+                : SSE_TranslationHints_Model_Data_Meta::ADD_MODE_SELECT_IF_FIRST
+        );
+        return $this;
+    }
+    public function logMetaDataUnused($key, $value)
+    {
+        if (!isset($this->_metaData[$key])) {
+            $this->_metaData[$key] = new SSE_TranslationHints_Model_Data_Meta($key);
+        }
+        $valueObject = new SSE_TranslationHints_Model_Data_Value(
+            $value, $this->_mode->getCurrentSourceType(), $this->_mode->getCurrentSourceFile()
+        );
+        $this->_metaData[$key]->addValue(
+            $valueObject,
+            SSE_TranslationHints_Model_Data_Meta::ADD_MODE_DO_NOT_SELECT
         );
         return $this;
     }

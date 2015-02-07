@@ -17,6 +17,10 @@
  */
 class SSE_TranslationHints_Model_Data_Meta
 {
+    const ADD_MODE_SELECT_IF_FIRST = 0;
+    const ADD_MODE_OVERRIDE = 1;
+    const ADD_MODE_DO_NOT_SELECT = 2;
+    
     protected $_key;
     protected $_value;
     protected $_values = array();
@@ -28,8 +32,17 @@ class SSE_TranslationHints_Model_Data_Meta
     public function addValue(SSE_TranslationHints_Model_Data_Value $value, $override)
     {
         $this->_values[] = $value;
-        if ($override || is_null($this->_value)) {
-            $this->_value = $value;
+        switch ($override) {
+        	case self::ADD_MODE_OVERRIDE:
+        	    $this->_value = $value;
+        	    break;
+        	case self::ADD_MODE_SELECT_IF_FIRST:
+        	    if (is_null($this->_value)) {
+        	        $this->_value = $value;
+        	    }
+        	    break;
+        	case self::ADD_MODE_DO_NOT_SELECT:
+        	    break;
         }
         return $this;
     }

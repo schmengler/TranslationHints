@@ -137,12 +137,7 @@ class SSE_TranslationHints_Model_Translate extends Mage_Core_Model_Translate
         if ($this->getTranslationHintsEnabled()) {
             foreach ($data as $key => $value) {
                 if ($key === $value) {
-                    //TODO move this logic elsewhere
-                    $keyExistedBefore = isset($this->_data->getData()[$key]);
-                    $this->_data->logMetaData($key, $value, false);
-                    if (!$keyExistedBefore) {
-                        $this->_data->getMetadata()[$key]->unsetValue();
-                    }
+                    $this->_data->logMetaDataUnused($key, $value);
                 }
             }
         }
