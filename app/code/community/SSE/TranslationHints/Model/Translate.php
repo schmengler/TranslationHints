@@ -23,7 +23,7 @@ class SSE_TranslationHints_Model_Translate extends Mage_Core_Model_Translate
      */
     protected $_mode;
     /**
-     * @var SSE_TranslationHints_Helper_Decorator
+     * @var SSE_TranslationHints_Model_Decorator
      */
     protected $_decorator;
     

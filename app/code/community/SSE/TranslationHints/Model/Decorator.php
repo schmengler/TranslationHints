@@ -39,13 +39,13 @@ class SSE_TranslationHints_Model_Decorator
     {
         $metaData = $this->_translate->getMetaData();
         $formattedMetaData = '';
-        if (isset($metaData[$code])) {
-            $formattedMetaData .= $this->_formatMetaData($metaData[$code]);
+        if (!isset($metaData[$code])) {
+            $metaData[$code] = Mage::getModel('sse_translationhints/data_meta', $code);
         }
+        $formattedMetaData .= $this->_formatMetaData($metaData[$code]);
         if ($code != $text && isset($metaData[$text])) {
             $formattedMetaData .= $this->_formatMetaData($metaData[$text]);
         }
-        //FIXME (cached) information is missing or data is not being cached
         if ($this->_mode->getUseCache()) {
             $formattedMetaData .= '(cached)';
         }
