@@ -18,9 +18,10 @@
 	display: none;
     position: absolute;
     z-index: 99999;
-    width: auto;
     height: auto;
-    max-width: 200px;
+    width: auto;
+    min-width: 150px;
+    max-width: 350px;
     padding: 2px;
     margin: 0;
     border: 1px solid #999;
@@ -52,4 +53,14 @@
     text-align: center;
     text-decoration: none;
     text-transform: none;
+}
+.translation-hint-tag {
+    display: inline;
+    padding: 1px 5px;
+    border-radius: 6px;
+    background-color: #66f;
+    text-transform: uppercase;
+    color: #fff;
+    font-weight: bold;
+    line-height: 200%;
 }

@@ -47,7 +47,10 @@ class SSE_TranslationHints_Model_Decorator
             $formattedMetaData .= $this->_formatMetaData($metaData[$text]);
         }
         if ($this->_mode->getUseCache()) {
-            $formattedMetaData .= '(cached)';
+            $formattedMetaData .= '(C)';
+        }
+        if ($this->_mode->getIsDeveloperMode()) {
+            $formattedMetaData .= '(D)';
         }
         return sprintf('[__%s__]((%s))', $translation, str_replace('%', '%%', $formattedMetaData));
     }
@@ -56,7 +59,7 @@ class SSE_TranslationHints_Model_Decorator
         $formattedMetaData = sprintf('__(%s):', $metaData->getKey());
         foreach ($metaData->getValues() as $value) {
             /* @var $value SSE_TranslationHints_Model_Data_Value */
-            $formattedMetaData .= sprintf("%s%s%s=%s|",
+            $formattedMetaData .= sprintf("%s%s%s = %s|",
                 $value === $metaData->getValue() ? '(x) ' : '',
                 $value->getSourceType(),
                 $value->getSourceFile() ? ': ' . $value->getSourceFile() : '',

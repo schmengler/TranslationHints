@@ -7,8 +7,8 @@ document.observe('dom:loaded',
             false
         );
         var decorateTranslationHints = function(textNode) {
-            var newText =  textNode.nodeValue.replace(/\[__(.*?)__\]\(\(__\((.*?)\):(.*?)(?:__\((.*?)\):(.*?))?(\(cached\))?\)\)/g,
-                function(match, translated, code, codeSources, text, textSources, cached) {
+            var newText =  textNode.nodeValue.replace(/\[__(.*?)__\]\(\(__\((.*?)\):(.*?)(?:__\((.*?)\):(.*?))?(\(C\))?(\(D\))?\)\)/g,
+                function(match, translated, code, codeSources, text, textSources, cached, developerMode) {
                     var result = translated + ' <span class="translation-hint-icon">i</span>';
                     result += '<span class="translation-hint-popup">';
                     result += '<b>'+ code +':</b><br/>';
@@ -22,7 +22,10 @@ document.observe('dom:loaded',
                             .replace(/\(x\)/g, '<span class="translation-hint-check">&#x2714;</span>');
                     }
                     if (cached) {
-                        result += cached;
+                        result += '<span class="translation-hint-tag">cached</span>&nbsp;';
+                    }
+                    if (developerMode) {
+                        result += '<span class="translation-hint-tag">Developer&nbsp;Mode</span>&nbsp;';
                     }
                     result += '</span>';
                     return result;

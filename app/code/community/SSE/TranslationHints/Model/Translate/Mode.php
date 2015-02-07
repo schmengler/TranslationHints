@@ -59,4 +59,8 @@ class SSE_TranslationHints_Model_Translate_Mode
     {
         return $this->_useCache;
     }
+    public function getIsDeveloperMode()
+    {
+        return Mage::getIsDeveloperMode();
+    }
 }
