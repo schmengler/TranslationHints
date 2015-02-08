@@ -12,8 +12,14 @@ Adds a new configuration option next to the template hints "Translation Hints" w
 1. Manual installation: download [the latest release](https://github.com/schmengler/TranslationHints/zipball/master) and copy the directories `app`, `js` and `skin` into the Magento installation.
 2. Install via composer as dev dependency:
 
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/schmengler/TranslationHints.git"
+        }
+    },
     "require-dev": {
-        "sse/translationhints": "dev-master"
+        "sse/translationhints": "~0.2.2"
     }
     
 
@@ -30,11 +36,14 @@ If the translated string is inside a DOM text node, it gets converted to a toolt
 
 ![Screenshot](https://github.com/schmengler/TranslationHints/raw/master/screenshot-frontend.png)
 
-Possible translation sources are *module*, *db* and *theme*.
-Strings where the translation is the same as the original do not count as translated (Magento removes those from the translation array).
+Possible translation sources are *module*, *db* and *theme*. The selected translation is marked with a green checkmark.
+
+In the example above you see the scope of the translation (Mage_Customer), the translation for this scope,
+as well as the translation that would be used for global scope, i.e. if there was no scope specific translation.
+The CACHED tag tells us that the translations have been loaded from translation cache.
 
 ## Version 
-* Version 0.1.0
+* Version 0.2.2
 
 ## License 
 * see [LICENSE](https://github.com/schmengler/TranslationHints/blob/master/license.txt) file
