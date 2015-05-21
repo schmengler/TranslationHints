@@ -101,6 +101,22 @@ class SSE_TranslationHints_Model_Data implements Serializable, ArrayAccess
             } else {
                 $this->logMetaDataUnused($keyWithoutScope, $value);
             }
+        } else {
+            // if a global definition overrides a global definition from a module
+            // log old module specific value as unused
+            if ($this->_metaData[$key]->getValue()
+                && isset($this->_dataScope[$key])
+                && $this->_metaData[$key]->getValue()->getSourceType() === SSE_TranslationHints_Model_Translate_Mode::SOURCE_MODULE
+            ) {
+                $keyWithScope = $this->_dataScope[$key] . Mage_Core_Model_Translate::SCOPE_SEPARATOR . $key;
+                if (! isset($this->_metaData[$keyWithScope])) {
+                    $this->_metaData[$keyWithScope] = new SSE_TranslationHints_Model_Data_Meta($keyWithScope);
+                    $this->_metaData[$keyWithScope]->addValue(
+                        $this->_metaData[$key]->getValue(),
+                        SSE_TranslationHints_Model_Data_Meta::ADD_MODE_DO_NOT_SELECT
+                    );
+                }
+            }
         }
         $this->_metaData[$key]->addValue(
             $valueObject,
