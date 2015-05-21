@@ -86,13 +86,17 @@ class SSE_TranslationHints_Model_Data implements Serializable, ArrayAccess
         );
         if (strpos($key, Mage_Core_Model_Translate::SCOPE_SEPARATOR)) {
             list($scope, $keyWithoutScope) = explode(Mage_Core_Model_Translate::SCOPE_SEPARATOR, $key, 2);
-            // find out if old value is being moved to scope, then copy value object and don't use current mode
+            // find out if old value is being copied to scope, then copy value object
+            // - see Mage_Core_Model_Translate::_addData()
             if (isset($this->_dataScope[$keyWithoutScope])
                 && $this->_dataScope[$keyWithoutScope] === $scope
                 && isset($this->_metaData[$keyWithoutScope])
                 && null !== $this->_metaData[$keyWithoutScope]->getValue()
             ) {
-                $valueObject = $this->_metaData[$keyWithoutScope]->getValue();
+                $oldValueObject = $this->_metaData[$keyWithoutScope]->getValue();
+                $this->_metaData[$key]->addValue(
+                    $oldValueObject, SSE_TranslationHints_Model_Data_Meta::ADD_MODE_OVERRIDE
+                );
             // else log key without scope as "unused"
             } else {
                 $this->logMetaDataUnused($keyWithoutScope, $value);

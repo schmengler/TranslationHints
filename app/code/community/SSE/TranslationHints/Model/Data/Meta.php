@@ -22,7 +22,13 @@ class SSE_TranslationHints_Model_Data_Meta
     const ADD_MODE_DO_NOT_SELECT = 2;
     
     protected $_key;
+    /**
+     * @var SSE_TranslationHints_Model_Data_Value
+     */
     protected $_value;
+    /**
+     * @var SSE_TranslationHints_Model_Data_Value[]
+     */
     protected $_values = array();
 
     public function __construct($key)
