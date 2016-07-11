@@ -59,8 +59,14 @@ class SSE_TranslationHints_Model_Decorator
         $formattedMetaData = sprintf('__(%s):', $metaData->getKey());
         foreach ($metaData->getValues() as $value) {
             /* @var $value SSE_TranslationHints_Model_Data_Value */
+            $checkmark = '';
+            if ($value === $metaData->getValue()) {
+                $checkmark = '(x)'; // used
+            } elseif ($value->getValue() === $metaData->getKey()) {
+                $checkmark = '(!)'; // ignored
+            }
             $formattedMetaData .= sprintf("%s%s%s = %s|",
-                $value === $metaData->getValue() ? '(x) ' : '',
+                $checkmark,
                 $value->getSourceType(),
                 $value->getSourceFile() ? ': ' . $value->getSourceFile() : '',
                 $value->getValue());

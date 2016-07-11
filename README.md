@@ -45,6 +45,12 @@ In the example above you see the scope of the translation (Mage_Customer), the t
 as well as the translation that would be used for global scope, i.e. if there was no scope specific translation.
 The CACHED tag tells us that the translations have been loaded from translation cache.
 
+If you see a red cross next to a translation, it has been **discarded** because the translated string equals the
+original string. This is a flaw in Magentos translation design which makes it impossible to force a translation like
+"OK" => "OK" for one module as soon as any other module translates "OK" differently.
+
+![Screenshot](https://github.com/schmengler/TranslationHints/raw/master/screenshot-discarded-translations.png)
+
 ## Technical Information
 
 The extension rewrites `Mage_Core_Model_Translate`. If translation hints are not enabled, the behaviour does not change.

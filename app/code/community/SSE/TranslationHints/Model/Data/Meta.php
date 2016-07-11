@@ -61,10 +61,18 @@ class SSE_TranslationHints_Model_Data_Meta
     {
         return $this->_key;
     }
+
+    /**
+     * @return SSE_TranslationHints_Model_Data_Value
+     */
     public function getValue()
     {
         return $this->_value;
     }
+
+    /**
+     * @return SSE_TranslationHints_Model_Data_Value[]
+     */
     public function getValues()
     {
         return $this->_values;

@@ -41,7 +41,8 @@
     display: block;    
 }
 .translation-hint-check,
-.translation-hint-check-not {
+.translation-hint-check-not,
+.translation-hint-discard {
     display: inline;
     border-radius: 6px;
     font-weight: normal;
@@ -55,7 +56,12 @@
 .translation-hint-check {
     background-color: #393;
     padding: 1px 5px;
-    color: #fff;	
+    color: #fff;
+}
+.translation-hint-discard {
+    background-color: #933;
+    padding: 1px 5px;
+    color: #fff;
 }
 .translation-hint-check-not {
     background-color: transparent;
