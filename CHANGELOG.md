@@ -2,7 +2,13 @@
 
 All Notable changes to `SSE_TranslationHints` will be documented in this file
 
-## 0.2.3. - 2015-05-21
+## 0.2.4 - 2016-07-11
+
+### Added
+
+- Highlight discarded translations (with key==text)
+
+## 0.2.3 - 2015-05-21
 
 ### Fixed
 

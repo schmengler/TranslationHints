@@ -3,7 +3,7 @@ SSE_TranslationHints
 Adds a new configuration option next to the template hints "Translation Hints" which will enable information about source of translations.
 
 ## Version 
-* Version 0.2.3
+* Version 0.2.4
 
 ## Requirements ##
 
